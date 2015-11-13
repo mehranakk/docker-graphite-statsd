@@ -47,7 +47,8 @@ RUN python ./setup.py install
 
 # install statsd
 RUN git clone -b v0.7.2 --depth 1 https://github.com/etsy/statsd.git /opt/statsd
-ADD conf/statsd/config.js /opt/statsd/config.js
+ADD conf/statsd/config.js /opt/statsd-conf/config.js
+RUN ln -s /opt/statsd-conf/config.js /opt/statsd/config.js
 
 # config nginx
 RUN rm /etc/nginx/sites-enabled/default
@@ -77,6 +78,6 @@ RUN apt-get clean\
 
 # defaults
 EXPOSE 80:80 2003:2003 8125:8125/udp
-VOLUME ["/opt/graphite", "/etc/nginx", "/opt/statsd", "/etc/logrotate.d", "/var/log"]
+VOLUME ["/opt/graphite/conf", "/opt/graphite/storage/whisper", "/opt/statsd-conf", "/var/log"]
 ENV HOME /root
 CMD ["/sbin/my_init"]
